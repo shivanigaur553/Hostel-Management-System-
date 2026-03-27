@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login — GEHU Hostel</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body class="auth-page">
+    <div class="auth-card">
+      <div class="auth-head">
+        <div class="logo">⚙️</div>
+        <h1 class="serif">Admin Access</h1>
+        <p>Restricted · Authorised Personnel Only</p>
+      </div>
+      <div class="auth-body">
+        <div class="alert alert-err" id="alert"></div>
+
+        <div class="field">
+          <label>Username</label>
+          <input
+            type="text"
+            id="uname"
+            autocomplete="off"
+            spellcheck="false"
+            data-lpignore="true"
+          />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input
+            type="password"
+            id="pass"
+            autocomplete="new-password"
+            data-lpignore="true"
+          />
+        </div>
+
+        <button
+          class="btn btn-primary btn-full"
+          onclick="doLogin()"
+          style="margin-top: 6px"
+        >
+          Access Admin Panel →
+        </button>
+
+        <a href="../index.html" class="back-link">← Back to Portal Home</a>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const API = "http://localhost:8080/api";
+
+      // Already logged in?
+      if (sessionStorage.getItem("hostel_admin"))
+        location.href = "dashboard.html";
+
+      // Defeat autofill
+      window.addEventListener("load", () => {
+        document.querySelectorAll("input").forEach((i) => {
+          i.value = "";
+          setTimeout(() => (i.value = ""), 200);
+        });
+      });
+
+      function toast(msg, type = "ok") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      function setAlert(msg) {
+        const el = document.getElementById("alert");
+        el.textContent = msg;
+        el.classList.add("show");
+      }
+
+      async function doLogin() {
+        const u = document.getElementById("uname").value.trim();
+        const p = document.getElementById("pass").value.trim();
+        document.getElementById("alert").classList.remove("show");
+
+        if (!u || !p) {
+          setAlert("Please enter username and password.");
+          return;
+        }
+
+        try {
+          const res = await fetch(API + "/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: u, password: p, role: "Admin" }),
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            sessionStorage.setItem("hostel_admin", JSON.stringify(data));
+            toast("Access granted. Loading dashboard…");
+            setTimeout(() => (location.href = "dashboard.html"), 700);
+          } else {
+            setAlert(data.error || "Invalid admin credentials.");
+          }
+        } catch (e) {
+          setAlert("Cannot connect to server. Make sure Main.java is running.");
+        }
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") doLogin();
+      });
+    </script>
+  </body>
+</html>
