@@ -1,6 +1,6 @@
 # GEHU Hostel Management System
 
-**Graphic Era Hill University, Dehradun — PBL Phase 1**
+**Graphic Era Hill University, Dehradun — PBL Phase 2**
 
 A full-stack hostel management web application with a Java backend and HTML/CSS/JS frontend.
 
@@ -19,7 +19,7 @@ A full-stack hostel management web application with a Java backend and HTML/CSS/
 ## Tech Stack
 
 - **Backend:** Java (`com.sun.net.httpserver`) — REST API on port 8080
-- **Frontend:** HTML5, CSS3, Vanilla JavaScript
+- **Frontend:** HTML5, CSS3, JavaScript
 - **API Style:** REST / JSON (no external libraries)
 
 ---
