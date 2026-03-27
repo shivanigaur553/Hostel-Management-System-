@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Login — GEHU Hostel</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body class="auth-page">
+    <div class="auth-card">
+      <div class="auth-head">
+        <div class="logo">🎓</div>
+        <h1 class="serif">Student Login</h1>
+        <p>Enter your roll number and password to continue</p>
+      </div>
+      <div class="auth-body">
+        <div class="alert alert-err" id="alert"></div>
+
+        <div class="field">
+          <label>Roll Number</label>
+          <input
+            type="text"
+            id="rollNo"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="pass" autocomplete="new-password" />
+        </div>
+
+        <button
+          class="btn btn-primary btn-full"
+          onclick="doLogin()"
+          style="margin-top: 6px"
+        >
+          Sign In →
+        </button>
+
+        <a href="../index.html" class="back-link">← Back to Portal Home</a>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const API = "http://localhost:8080/api";
+
+      if (sessionStorage.getItem("hostel_student")) {
+        location.href = "dashboard.html";
+      }
+
+      function toast(msg, type = "ok") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      function setAlert(msg) {
+        const el = document.getElementById("alert");
+        el.textContent = msg;
+        el.classList.add("show");
+      }
+
+      async function doLogin() {
+        const rollNo = document.getElementById("rollNo").value.trim();
+        const pass = document.getElementById("pass").value.trim();
+        document.getElementById("alert").classList.remove("show");
+
+        if (!rollNo || !pass) {
+          setAlert("Please enter roll number and password.");
+          return;
+        }
+
+        try {
+          const res = await fetch(API + "/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: rollNo,
+              password: pass,
+              role: "Student",
+            }),
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            sessionStorage.setItem("hostel_student", JSON.stringify(data));
+            toast("Welcome, " + data.name + "!");
+            setTimeout(() => (location.href = "dashboard.html"), 600);
+          } else {
+            setAlert(data.error || "Invalid roll number or password.");
+          }
+        } catch (e) {
+          setAlert("Cannot connect to server. Make sure Main.java is running.");
+        }
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") doLogin();
+      });
+    </script>
+  </body>
+</html>

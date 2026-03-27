@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard — GEHU Hostel</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+      body {
+        background: var(--off);
+        display: block;
+      }
+      .student-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px 60px;
+      }
+      .s-nav {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 58px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .s-nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Instrument Serif", serif;
+        font-size: 1rem;
+        color: var(--ink);
+      }
+      .s-nav-brand .dot {
+        width: 7px;
+        height: 7px;
+        background: var(--ink);
+        border-radius: 50%;
+      }
+      .s-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .s-hero {
+        padding: 40px 0 32px;
+      }
+      .s-hero-eyebrow {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--ink3);
+        margin-bottom: 10px;
+      }
+      .s-hero h1 {
+        font-size: 2rem;
+        color: var(--ink);
+        margin-bottom: 8px;
+      }
+      .s-hero p {
+        color: var(--ink3);
+        font-size: 0.9rem;
+      }
+      .my-room-card {
+        background: var(--ink);
+        color: var(--white);
+        border-radius: var(--r);
+        padding: 24px 28px;
+        margin-bottom: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .my-room-card .label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0.5;
+        margin-bottom: 4px;
+      }
+      .my-room-card .val {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.5rem;
+      }
+      .my-room-card .val-sm {
+        font-size: 1rem;
+      }
+      .fee-paid {
+        color: #4ade80;
+      }
+      .fee-pending {
+        color: #fbbf24;
+      }
+      .filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .filter-bar .title {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.1rem;
+        flex: 1;
+      }
+      .f-btn {
+        padding: 6px 16px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--ink3);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .f-btn:hover {
+        border-color: var(--ink2);
+        color: var(--ink);
+      }
+      .f-btn.active {
+        background: var(--ink);
+        color: var(--white);
+        border-color: var(--ink);
+      }
+      .rooms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+      }
+      .room-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        overflow: hidden;
+        transition: all 0.18s;
+      }
+      .room-card:hover {
+        box-shadow: var(--shadow);
+        transform: translateY(-2px);
+        border-color: var(--border2);
+      }
+      .room-card-top {
+        padding: 18px 20px 14px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .room-num {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.2rem;
+        color: var(--ink);
+      }
+      .room-block {
+        font-size: 0.72rem;
+        color: var(--ink3);
+        margin-top: 2px;
+      }
+      .room-meta {
+        display: flex;
+        gap: 18px;
+        padding: 14px 20px 10px;
+      }
+      .r-meta {
+        text-align: center;
+      }
+      .r-meta .v {
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--ink);
+      }
+      .r-meta .l {
+        font-size: 0.68rem;
+        color: var(--ink3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 2px;
+      }
+      .room-facs {
+        padding: 0 20px 14px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .fac {
+        background: var(--off);
+        border: 1px solid var(--border);
+        color: var(--ink2);
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 3px 9px;
+        border-radius: 4px;
+      }
+      .room-foot {
+        padding: 12px 20px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--mist);
+      }
+      .room-price {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.05rem;
+        color: var(--ink);
+      }
+      .room-price span {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.7rem;
+        color: var(--ink3);
+      }
+      .fac-strip {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .fac-strip .label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--ink3);
+      }
+      .fac-strip .pill {
+        font-size: 0.78rem;
+        color: var(--ink2);
+        background: var(--off);
+        border: 1px solid var(--border);
+        padding: 4px 12px;
+        border-radius: 14px;
+      }
+      .stats-strip {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .s-stat {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 16px 20px;
+        flex: 1;
+        text-align: center;
+      }
+      .s-stat .n {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.6rem;
+        color: var(--ink);
+      }
+      .s-stat .l {
+        font-size: 0.7rem;
+        color: var(--ink3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 3px;
+      }
+      @media (max-width: 600px) {
+        .stats-strip {
+          flex-direction: column;
+        }
+        .rooms-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="s-nav">
+      <div class="s-nav-brand">
+        <div class="dot"></div>
+        GEHU Hostel
+      </div>
+      <div class="s-nav-right">
+        <span
+          style="font-size: 0.82rem; color: var(--ink3)"
+          id="navName"
+        ></span>
+        <button class="btn btn-ghost btn-sm" onclick="logout()">
+          Sign out
+        </button>
+      </div>
+    </nav>
+
+    <div class="student-wrap">
+      <div class="s-hero">
+        <div class="s-hero-eyebrow">🏠 Room Availability · 2024–25</div>
+        <h1 class="serif">Welcome, <span id="heroName">Student</span></h1>
+        <p>Browse available rooms and check hostel facilities below.</p>
+      </div>
+
+      <div class="my-room-card" id="myRoomCard" style="display: none">
+        <div>
+          <div class="label">Your Room</div>
+          <div class="val" id="myRoomNo">—</div>
+        </div>
+        <div>
+          <div class="label">Course</div>
+          <div class="val-sm" id="myCourse">—</div>
+        </div>
+        <div>
+          <div class="label">Fee Status</div>
+          <div class="val-sm" id="myFee">—</div>
+        </div>
+        <div>
+          <div class="label">Roll Number</div>
+          <div class="val-sm" id="myRoll">—</div>
+        </div>
+      </div>
+
+      <div class="stats-strip">
+        <div class="s-stat">
+          <div class="n" id="stTotal">—</div>
+          <div class="l">Total Rooms</div>
+        </div>
+        <div class="s-stat">
+          <div class="n" id="stAvail">—</div>
+          <div class="l">Available</div>
+        </div>
+        <div class="s-stat">
+          <div class="n">3</div>
+          <div class="l">Blocks</div>
+        </div>
+      </div>
+
+      <div class="fac-strip">
+        <span class="label">Facilities</span>
+        <span class="pill">❄️ AC</span><span class="pill">📶 WiFi</span>
+        <span class="pill">🍽️ Mess</span
+        ><span class="pill">🔒 24×7 Security</span>
+        <span class="pill">💧 Hot Water</span
+        ><span class="pill">📚 Study Room</span>
+        <span class="pill">🧺 Laundry</span>
+      </div>
+
+      <div class="filter-bar">
+        <div class="title serif">All Rooms</div>
+        <button class="f-btn active" onclick="filter('All', this)">All</button>
+        <button class="f-btn" onclick="filter('AC', this)">AC</button>
+        <button class="f-btn" onclick="filter('Non-AC', this)">Non-AC</button>
+        <button class="f-btn" onclick="filter('Deluxe', this)">Deluxe</button>
+      </div>
+
+      <div class="rooms-grid" id="roomsGrid">
+        <div class="room-card" style="grid-column: 1/-1">
+          <div class="loading">Connecting to server…</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const API = "http://localhost:8080/api";
+      const session = JSON.parse(
+        sessionStorage.getItem("hostel_student") || "null",
+      );
+      if (!session || session.role !== "Student") location.href = "login.html";
+
+      document.getElementById("navName").textContent = session.name;
+      document.getElementById("heroName").textContent =
+        session.name.split(" ")[0];
+      document.getElementById("myRoll").textContent = session.username;
+      document.getElementById("myCourse").textContent = session.course || "—";
+
+      if (session.roomNo && session.roomNo !== -1) {
+        document.getElementById("myRoomCard").style.display = "flex";
+        document.getElementById("myRoomNo").textContent =
+          "Room " + session.roomNo;
+        const feeEl = document.getElementById("myFee");
+        feeEl.textContent = session.feeStatus || "—";
+        feeEl.className =
+          "val-sm " +
+          (session.feeStatus === "Paid" ? "fee-paid" : "fee-pending");
+      }
+
+      function toast(msg, type = "ok") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      let allRooms = [],
+        activeFilter = "All";
+
+      function filter(type, btn) {
+        activeFilter = type;
+        document
+          .querySelectorAll(".f-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderRooms();
+      }
+
+      function renderRooms() {
+        const list =
+          activeFilter === "All"
+            ? allRooms
+            : allRooms.filter((r) => r.type === activeFilter);
+        const avail = allRooms.filter(
+          (r) => r.available && r.occupied < r.capacity,
+        ).length;
+        document.getElementById("stTotal").textContent = allRooms.length;
+        document.getElementById("stAvail").textContent = avail;
+        const grid = document.getElementById("roomsGrid");
+        if (!list.length) {
+          grid.innerHTML =
+            '<div class="room-card" style="grid-column:1/-1"><div class="empty">No rooms match this filter.</div></div>';
+          return;
+        }
+        const badgeMap = {
+          AC: "badge-ac",
+          "Non-AC": "badge-nonac",
+          Deluxe: "badge-deluxe",
+        };
+        const isAvail = (r) => r.available && r.occupied < r.capacity;
+        grid.innerHTML = list
+          .map(
+            (r) => `
+        <div class="room-card">
+          <div class="room-card-top">
+            <div>
+              <div class="room-num">Room ${r.roomNo}</div>
+              <div class="room-block">Block ${r.block}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <span class="badge ${badgeMap[r.type] || "badge-ac"}">${r.type}</span>
+              <span class="badge ${isAvail(r) ? "badge-avail" : "badge-full"}">${isAvail(r) ? "✓ Available" : "✗ Full"}</span>
+            </div>
+          </div>
+          <div class="room-meta">
+            <div class="r-meta"><div class="v">${r.capacity}</div><div class="l">Capacity</div></div>
+            <div class="r-meta"><div class="v">${r.capacity - r.occupied}</div><div class="l">Free</div></div>
+            <div class="r-meta"><div class="v">${r.occupied}</div><div class="l">Occupied</div></div>
+          </div>
+          <div class="room-facs">${(r.facilities || []).map((f) => `<span class="fac">${f}</span>`).join("")}</div>
+          <div class="room-foot">
+            <div class="room-price">₹${Number(r.price).toLocaleString("en-IN")}<span> / semester</span></div>
+          </div>
+        </div>`,
+          )
+          .join("");
+      }
+
+      async function loadRooms() {
+        try {
+          allRooms = await fetch(API + "/rooms").then((r) => r.json());
+          renderRooms();
+        } catch (e) {
+          document.getElementById("roomsGrid").innerHTML = `
+          <div class="room-card" style="grid-column:1/-1">
+            <div style="padding:32px;text-align:center;color:var(--red);">
+              ⚠️ Cannot reach server at localhost:8080. Make sure Main.java is running.
+            </div>
+          </div>`;
+          document.getElementById("stTotal").textContent = "!";
+          document.getElementById("stAvail").textContent = "!";
+        }
+      }
+
+      function logout() {
+        sessionStorage.removeItem("hostel_student");
+        location.href = "login.html";
+      }
+      loadRooms();
+    </script>
+  </body>
+</html>
